@@ -1,8 +1,7 @@
-hours: hours.o
-	$(CC) -o hours hours.o
+CFLAGS=-Wall -Werror
+NAME=hours
 
-hours.o: hours.c
-	$(CC) -c hours.c
+$(NAME): $(NAME).o -lgit2
 
 clean:
-	rm hours hours.o
+	$(RM) $(NAME) *.o
