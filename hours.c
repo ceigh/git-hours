@@ -5,8 +5,8 @@
 
 int main() {
   char cwd[PATH_MAX];
-  git_repository *repo;
-  git_revwalk *walker;
+  git_repository *repo = NULL;
+  git_revwalk *walker = NULL;
 
   getcwd(cwd, sizeof(cwd));
   printf("cwd: %s\n\n", cwd);
@@ -19,7 +19,7 @@ int main() {
 
   git_oid oid;
   while(!git_revwalk_next(&oid, walker)) {
-    git_commit *commit;
+    git_commit *commit = NULL;
     git_commit_lookup(&commit, repo, &oid);
 
     printf("oid: %s, summary: %s\n",
