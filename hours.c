@@ -12,9 +12,9 @@ int main() {
   printf("cwd: %s\n\n", cwd);
 
   git_libgit2_init();
-
   git_repository_open(&repo, cwd);
   git_revwalk_new(&walker, repo);
+  git_revwalk_sorting(walker, GIT_SORT_REVERSE);
   git_revwalk_push_head(walker);
 
   git_oid oid;
