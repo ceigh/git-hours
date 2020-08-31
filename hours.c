@@ -22,9 +22,7 @@ int main() {
     git_commit *commit = NULL;
     git_commit_lookup(&commit, repo, &oid);
 
-    printf("oid: %s, summary: %s\n",
-      git_oid_tostr_s(&oid),
-      git_commit_summary(commit));
+    printf("%li\n", git_commit_time(commit));
 
     git_commit_free(commit);
   }
