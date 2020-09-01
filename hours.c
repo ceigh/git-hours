@@ -22,7 +22,9 @@ int main() {
     git_commit *commit = NULL;
     git_commit_lookup(&commit, repo, &oid);
 
-    printf("%li\n", git_commit_time(commit));
+    printf("%li %s\n",
+      git_commit_time(commit),
+      (*git_commit_author(commit)).email);
 
     git_commit_free(commit);
   }
