@@ -20,6 +20,11 @@ const char *get_default_email() {
 
   git_config_free(cfg);
   git_libgit2_shutdown();
+
+  if (email == NULL) {
+    fprintf(stderr, "Empty git user email!\n");
+    exit(EXIT_FAILURE);
+  }
   return email;
 }
 
@@ -91,5 +96,5 @@ int main() {
   git_repository_free(repo);
   git_libgit2_shutdown();
 
-  return 0;
+  exit(EXIT_SUCCESS);
 }
