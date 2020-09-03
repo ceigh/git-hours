@@ -9,6 +9,8 @@
 #define MAX_DIFF_MINUTES 120
 #define FIRST_COMMIT_MINUTES 120
 
+#define VERSION "0.1.0"
+
 /* get user email from .gitconfig */
 const char *get_default_email() {
   const char *email = NULL;
@@ -105,11 +107,18 @@ void get_hours(
 }
 
 void parse_opts(int argc, char **argv, char **email, char **path) {
+  /* see
+   * https://gnu.org/savannah-checkouts/gnu/libc/manual/html_node/Example-of-Getopt.html
+   */
   int c;
   opterr = 0;
 
-  while ((c = getopt(argc, argv, "e:")) != -1) {
+  while ((c = getopt(argc, argv, "ve:")) != -1) {
     switch (c) {
+      case 'v':
+        printf("%s\n", VERSION);
+        exit(EXIT_SUCCESS);
+        break;
       case 'e':
         *email = optarg;
         break;
