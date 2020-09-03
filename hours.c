@@ -1,10 +1,12 @@
 #include <ctype.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+
 #include <linux/limits.h>
+
 #include <git2.h>
-#include <getopt.h>
 
 #define MAX_DIFF_MINUTES 120
 #define FIRST_COMMIT_MINUTES 120
@@ -118,7 +120,6 @@ void parse_opts(int argc, char **argv, char **email, char **path) {
       case 'v':
         printf("%s\n", VERSION);
         exit(EXIT_SUCCESS);
-        break;
       case 'e':
         *email = optarg;
         break;
