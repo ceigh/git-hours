@@ -28,7 +28,7 @@ const char *get_default_email() {
   return email;
 }
 
-int get_hours(const char *path_to_repo, const char *author_email) {
+int get_hours(const char *path_to_repo, const char *author_email, const int **commits) {
   git_repository *repo = NULL;
   git_revwalk *walker = NULL;
 
@@ -89,15 +89,19 @@ int get_hours(const char *path_to_repo, const char *author_email) {
   git_repository_free(repo);
   git_libgit2_shutdown();
 
+  *commits = &commits_total;
   return (int)(minutes_total / 60);
 }
 
 int main() {
   const char *default_email = get_default_email();
+
   char cwd[PATH_MAX];
   getcwd(cwd, sizeof(cwd));
-  const int hours = get_hours(cwd, default_email);
 
-  printf("%s\t%d\n", default_email, hours);
+  const int *commits = NULL;
+  const int hours = get_hours(cwd, default_email, &commits);
+
+  printf("%s\t%d\t%d\n", default_email, hours, *commits);
   exit(EXIT_SUCCESS);
 }
