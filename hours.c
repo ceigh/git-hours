@@ -125,17 +125,18 @@ void parse_opts(int argc, char **argv, char **email, char **path) {
         break;
       case '?':
         if (optopt == 'e')
-          fprintf(stderr, "Option -%c requires an argument.\n", optopt);
+          fprintf(stderr, "Option -%c requires an argument\n", optopt);
         else if (isprint(optopt))
-          fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+          fprintf (stderr, "Unknown option `-%c`\n", optopt);
         else
-          fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);
+          fprintf (stderr, "Unknown option character `\\x%x`\n", optopt);
         exit(EXIT_FAILURE);
       default:
         abort();
     }
   }
 
+  /* get non-optional path arg */
   *path = argv[optind];
 }
 
