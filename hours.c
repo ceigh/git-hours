@@ -28,17 +28,12 @@ const char *get_default_email() {
   return email;
 }
 
-int main() {
-  const char *default_email = get_default_email();
-
-  char cwd[PATH_MAX];
-  getcwd(cwd, sizeof(cwd));
-
+int get_hours(const char *path_to_repo, const char *author_email) {
   git_repository *repo = NULL;
   git_revwalk *walker = NULL;
 
   git_libgit2_init();
-  git_repository_open(&repo, cwd);
+  git_repository_open(&repo, path_to_repo);
 
   /* set up history walker */
   git_revwalk_new(&walker, repo);
@@ -57,7 +52,7 @@ int main() {
     const git_signature author = *git_commit_author(commit);
 
     /* filter commits - only from one author */
-    if (strcmp(default_email, author.email)) {
+    if (strcmp(author_email, author.email)) {
       git_commit_free(commit);
       continue;
     }
@@ -89,12 +84,20 @@ int main() {
   /* to balance last commit minutes */
   if (minutes_total >= FIRST_COMMIT_MINUTES) minutes_total -= FIRST_COMMIT_MINUTES;
 
-  printf("%s\t%d\t%d\n", default_email, (int)(minutes_total / 60), commits_total);
-
   /* free */
   git_revwalk_free(walker);
   git_repository_free(repo);
   git_libgit2_shutdown();
 
+  return (int)(minutes_total / 60);
+}
+
+int main() {
+  const char *default_email = get_default_email();
+  char cwd[PATH_MAX];
+  getcwd(cwd, sizeof(cwd));
+  const int hours = get_hours(cwd, default_email);
+
+  printf("%s\t%d\n", default_email, hours);
   exit(EXIT_SUCCESS);
 }
