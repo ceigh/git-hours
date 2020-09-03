@@ -26,11 +26,9 @@ const char *get_default_email() {
 int main() {
   const char *default_email = get_default_email();
 
-  /* get current working directory path */
   char cwd[PATH_MAX];
   getcwd(cwd, sizeof(cwd));
 
-  /* init libgit */
   git_repository *repo = NULL;
   git_revwalk *walker = NULL;
 
@@ -43,14 +41,12 @@ int main() {
   git_revwalk_sorting(walker, GIT_SORT_REVERSE);
   git_revwalk_push_head(walker);
 
-  /* set counters */
   git_oid oid;
   int commits_total = 0;
   float minutes_total = 0;
   long int prev_time = 0;
 
   while(!git_revwalk_next(&oid, walker)) {
-    /* get commit data */
     git_commit *commit = NULL;
     git_commit_lookup(&commit, repo, &oid);
     const git_signature author = *git_commit_author(commit);
@@ -67,7 +63,6 @@ int main() {
     const long int time = author.when.time;
     /* difference between commits in minutes */
     const float diff = (time - prev_time) / 60.0;
-    /* replace previous commit time with current */
     prev_time = time;
 
     /* skip first commit difference */
@@ -89,7 +84,7 @@ int main() {
   /* to balance last commit minutes */
   if (minutes_total >= FIRST_COMMIT_MINUTES) minutes_total -= FIRST_COMMIT_MINUTES;
 
-  printf("%s\t%d\t%d\n", default_email, (int)minutes_total / 60, commits_total);
+  printf("%s\t%d\t%d\n", default_email, (int)(minutes_total / 60), commits_total);
 
   /* free */
   git_revwalk_free(walker);
