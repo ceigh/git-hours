@@ -39,6 +39,10 @@ void get_hours(
 
   git_libgit2_init();
   git_repository_open(&repo, path_to_repo);
+  if (repo == NULL) {
+    perror("Error opening repository");
+    exit(EXIT_FAILURE);
+  }
 
   /* set up history walker */
   git_revwalk_new(&walker, repo);
