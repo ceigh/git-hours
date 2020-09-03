@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <linux/limits.h>
 #include <git2.h>
@@ -6,6 +7,7 @@
 #define MAX_DIFF_MINUTES 120
 #define FIRST_COMMIT_MINUTES 120
 
+/* get user email from .gitconfig */
 const char *get_default_email() {
   const char *email = NULL;
   git_config *cfg = NULL;
@@ -51,11 +53,10 @@ int main() {
     /* get commit data */
     git_commit *commit = NULL;
     git_commit_lookup(&commit, repo, &oid);
-    const git_signature *author = git_commit_author(commit);
+    const git_signature author = *git_commit_author(commit);
 
     /* filter commits - only from one author */
-    const char *commit_email = (*author).email;
-    if (*commit_email != *default_email) {
+    if (strcmp(default_email, author.email)) {
       git_commit_free(commit);
       continue;
     }
@@ -63,7 +64,7 @@ int main() {
     /* now we can start to count commits and time */
     commits_total++;
 
-    const long int time = (*author).when.time;
+    const long int time = author.when.time;
     /* difference between commits in minutes */
     const float diff = (time - prev_time) / 60.0;
     /* replace previous commit time with current */
@@ -84,8 +85,13 @@ int main() {
 
     git_commit_free(commit);
   }
-  printf("%d\n", (int)minutes_total / 60);
 
+  /* to balance last commit minutes */
+  if (minutes_total >= FIRST_COMMIT_MINUTES) minutes_total -= FIRST_COMMIT_MINUTES;
+
+  printf("%s\t%d\t%d\n", default_email, (int)minutes_total / 60, commits_total);
+
+  /* free */
   git_revwalk_free(walker);
   git_repository_free(repo);
   git_libgit2_shutdown();
