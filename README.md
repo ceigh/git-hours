@@ -24,7 +24,7 @@ me@org.com    16    19
 
 Three columns: author email, total hours spended and total commits from this author.
 
-If you don't have `.gitconfig` file, you can create it, see `GIT-CONFIG(1)`.
+If you don't have `.gitconfig` file, you can create it, see `git-config(1)`.
 
 Also you can pass `-e` flag to command, with desired email address:
 
