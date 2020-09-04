@@ -48,7 +48,7 @@ For detail explanation, you can see original git-hours [HIW](https://github.com/
 
 ## Installation
 
-As a main dependency i use [libgit2](https://github.com/libgit2/libgit2), to you need to install it in your system first.
+As a main dependency i use [libgit2](https://github.com/libgit2/libgit2), so you need to install it in your system first.
 
 After it, you can just
 
