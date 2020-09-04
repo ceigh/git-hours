@@ -1,29 +1,90 @@
-.TH GIT-HOURS 1 "04 Sep 2020" "1.0.0" "Git hours manual"
+.TH GIT\-HOURS 1 "04 Sep 2020" "1.0.1" "Git Hours Man Page"
+
 .SH NAME
-git hours - count the time spent on code via git
+git hours \- count the time spent on code via git
+
 .SH SYNOPSIS
-git hours [-e <git_user_email>] [<path_to_git_repo>]
+.SY git\ hours
+.OP \-e email
+.RI [ path ]
+.YS
+
 .SH DESCRIPTION
-git-hours is a simple implementation of a git commits-based algorithm for calculating hours spent on code.
+git hours is a simple implementation of a git commits\-based algorithm for calculating hours spent on code.
+.br
+In short \- it groups commits by time interval and sum timestamp differences.
 
-In short: it groups commits by time interval and sum timestamp differences.
 .SH OPTIONS
-The git hours takes author email and path to git repository as options.
+\-e
+.I email
+.br
+.in 14
+Use this
+.I email
+to count, instead of default from
+.I .gitconfig
+file.
+.br
+.in
+\-h
+.br
+.in 14
+Open this manual page.
+.br
+.in
+\-v
+.br
+.in 14
+Show git hours version information.
+.in
 
--e <author_email>
-
-use this email to count, instead of default from .gitconfig
-
--v
-
-show version
-
--h
-
-show this page
-.SH SEE ALSO
-GIT-CONFIG(1)
 .SH BUGS
-No known bugs, but if you get one, please open issue here: https://github.com/ceigh/git-hours/issues/new
+No known bugs, but if you get one, please open issue here:
+.I https://github.com/ceigh/git\-hours/issues/new
+
+.SH EXAMPLES
+git hours
+.br
+.in 14
+Use current working directory as git repository for count and show hours spended for user from default
+.I .gitconfig
+file.
+.br
+.in
+git hours
+.I /path/to/repo
+.br
+.in 14
+Use
+.I /path/to/repo
+as git repository for count and show hours spended for user from default
+.I .gitconfig
+file.
+.br
+.in
+git hours \-e
+.I me@org.com
+.br
+.in 14
+Use current working directory as git repository for count and show hours spended for user with
+.I me@org.com
+email.
+.br
+.in
+git hours \-e
+.I me@org.com
+.I /path/to/repo
+.br
+.in 14
+Use
+.I /path/to/repo
+as git repository for count and show hours spended for user with
+.I me@org.com
+email.
+.in
+
 .SH AUTHOR
-Artjom Löbsack (me@ceigh.com)
+Artjom Löbsack <me@ceigh.com> (https://ceigh.com)
+
+.SH SEE ALSO
+git-config(1)

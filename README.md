@@ -11,7 +11,7 @@ It is very easy to use.
 
 ### TL;DR
 
-`git hours[ -e <email>][ <path>]`
+`git hours [-e email] [path]`
 
 ### Details
 
