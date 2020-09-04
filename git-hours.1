@@ -1,0 +1,25 @@
+.TH GIT-HOURS 1 "04 Sep 2020" "1.0.0" "Git hours manual"
+.SH NAME
+git hours - count the time spent on code via git
+.SH SYNOPSIS
+git hours [-e <git_user_email>] [<path_to_git_repo>]
+.SH DESCRIPTION
+git-hours is a simple implementation of a git commits-based algorithm for calculating hours spent on code.
+
+In short: it groups commits by time interval and sum timestamp differences.
+.SH OPTIONS
+The git hours takes author email and path to git repository as options.
+
+-e <author_email>
+
+use this email to count, instead of default from .gitconfig
+
+<path_to_repo>
+
+count hours in given repository
+.SH SEE ALSO
+GIT-CONFIG(1)
+.SH BUGS
+No known bugs, but if you get one, please open issue here: https://github.com/ceigh/git-hours/issues/new
+.SH AUTHOR
+Artjom Löbsack (me@ceigh.com)

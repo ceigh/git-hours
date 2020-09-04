@@ -40,7 +40,7 @@ git hours Work/hours
 me@org.com    16    19
 ```
 
-For more information check `man git-hours`.
+For more information check `man git hours`.
 
 ## Algorithm
 
@@ -63,7 +63,7 @@ sudo make install
 
 ## Contribution
 
-If you find a bug or something, please open an [issue](https://github.com/ceigh/hours/issues/new).
+If you find a bug or something, please open an [issue](https://github.com/ceigh/git-hours/issues/new).
 
 ## License
 
