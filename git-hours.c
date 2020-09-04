@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <getopt.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -115,14 +116,17 @@ void parse_opts(int argc, char **argv, char **email, char **path) {
   int c;
   opterr = 0;
 
-  while ((c = getopt(argc, argv, "ve:")) != -1) {
+  while ((c = getopt(argc, argv, "e:hv")) != -1) {
     switch (c) {
-      case 'v':
-        printf("%s\n", VERSION);
-        exit(EXIT_SUCCESS);
       case 'e':
         *email = optarg;
         break;
+      case 'h':
+        system("man git hours");
+        exit(EXIT_SUCCESS);
+      case 'v':
+        printf("%s\n", VERSION);
+        exit(EXIT_SUCCESS);
       case '?':
         if (optopt == 'e')
           fprintf(stderr, "Option -%c requires an argument\n", optopt);
