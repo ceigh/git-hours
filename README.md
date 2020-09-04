@@ -18,8 +18,8 @@ It is very easy to use.
 Just call `git hours` in repository directory. That's it. It automatically use your email from default `.gitconfig` file, and count hours. Now you can see result:
 
 ```shell
-ceigh@arch ~/Work/hours ⎇ master $ git hours
-ceigh@pm.me    16    19
+git hours
+me@org.com    16    19
 ```
 
 Three columns: author email, total hours spended and total commits from this author.
@@ -29,15 +29,15 @@ If you don't have `.gitconfig` file, you can create it, see `GIT-CONFIG(1)`.
 Also you can pass `-e` flag to command, with desired email address:
 
 ```shell
-ceigh@arch ~/Work/hours ⎇ master $ git hours -e ceigh@pm.me
-ceigh@pm.me    16    19
+git hours -e me@org.com
+me@org.com    16    19
 ```
 
 And of course you can specify path to repository as non optional argument:
 
 ```shell
-ceigh@arch ~ $ git hours Work/hours
-ceigh@pm.me    16    19
+git hours Work/hours
+me@org.com    16    19
 ```
 
 For more information check `man git-hours`.
