@@ -1,4 +1,6 @@
-.TH GIT\-HOURS 1 "04 Sep 2020" "1.0.1" "Git Hours Man Page"
+.TH GIT\-HOURS 1 "04 Sep 2020" "1.1.0" "Git Hours Man Page"
+
+.ll 80
 
 .SH NAME
 git hours \- count the time spent on code via git
@@ -6,13 +8,17 @@ git hours \- count the time spent on code via git
 .SH SYNOPSIS
 .SY git\ hours
 .OP \-e email
+.OP \-d max_commits_difference_minutes
+.OP \-f first_commit_minutes
 .RI [ path ]
 .YS
 
 .SH DESCRIPTION
 git hours is a simple implementation of a git commits\-based algorithm for calculating hours spent on code.
 .br
-In short \- it groups commits by time interval and sum timestamp differences.
+In short: it groups commits by time interval and sum timestamp differences.
+.br
+You can check original algorithm here: https://github.com/kimmobrunfeldt/git-hours#how-it-works
 
 .SH OPTIONS
 \-e
@@ -24,6 +30,24 @@ Use this
 to count, instead of default from
 .I .gitconfig
 file.
+.br
+.in
+\-d
+.I max_commits_difference_minutes
+.br
+.in 14
+Stack commits only if between them <=
+.I max_commits_difference_minutes
+minutes.
+.br
+.in
+\-f
+.I first_commit_minutes
+.br
+.in 14
+Add
+.I first_commit_minutes
+minutes for every first commit in stack.
 .br
 .in
 \-h

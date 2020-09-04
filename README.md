@@ -11,7 +11,7 @@ It is very easy to use.
 
 ### TL;DR
 
-`git hours [-e email] [path]`
+`git hours [-e email] [-d max_commits_difference_minutes] [-f first_commit_minutes] [path]`
 
 ### Details
 
@@ -60,6 +60,26 @@ sudo make install
 ```
 
 *To delete this program, call `sudo make uninstall`.*
+
+## Configuration
+
+To set your own minimal commits interval, use `-d` key:
+
+```shell
+git hours -d 120 # stack commits only if between them <= 2 hours
+```
+
+> `-d` value must be number > 0.
+
+Also you can change first commit balance time with `-f` key:
+
+```shell
+git hours -f 120 # add 2 hours for every first commit in stack
+```
+
+> `-f` value must be number > 0.
+
+By default both this values are `120`.
 
 ## Contribution
 

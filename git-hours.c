@@ -9,10 +9,10 @@
 
 #include <git2.h>
 
-#define MAX_DIFF_MINUTES 120
-#define FIRST_COMMIT_MINUTES 120
+#define VERSION "1.1.0"
 
-#define VERSION "1.0.0"
+int MAX_DIFF_MINUTES = 120;
+int FIRST_COMMIT_MINUTES = 120;
 
 /* get user email from .gitconfig */
 const char *get_default_email() {
@@ -116,11 +116,23 @@ void parse_opts(int argc, char **argv, char **email, char **path) {
   int c;
   opterr = 0;
 
-  while ((c = getopt(argc, argv, "e:hv")) != -1) {
+  while ((c = getopt(argc, argv, "d:e:f:hv")) != -1) {
     switch (c) {
+      case 'd':
+        MAX_DIFF_MINUTES = atoi(optarg);
+        if (!MAX_DIFF_MINUTES) {
+          fprintf(stderr, "Option -%c requires number > 0\n", c);
+          exit(EXIT_FAILURE);
+        } else break;
       case 'e':
         *email = optarg;
         break;
+      case 'f':
+        FIRST_COMMIT_MINUTES = atoi(optarg);
+        if (!FIRST_COMMIT_MINUTES) {
+          fprintf(stderr, "Option -%c requires number > 0\n", c);
+          exit(EXIT_FAILURE);
+        } else break;
       case 'h':
         system("man git hours");
         exit(EXIT_SUCCESS);
@@ -128,7 +140,7 @@ void parse_opts(int argc, char **argv, char **email, char **path) {
         printf("%s\n", VERSION);
         exit(EXIT_SUCCESS);
       case '?':
-        if (optopt == 'e')
+        if (optopt == 'd' || optopt == 'e' || optopt == 'f')
           fprintf(stderr, "Option -%c requires an argument\n", optopt);
         else if (isprint(optopt))
           fprintf (stderr, "Unknown option `-%c`\n", optopt);
