@@ -1,4 +1,4 @@
-# 🕰️ hours
+# 🕰️ git-hours
 > Tool for count the time spent on code via git.
 
 ## Why
@@ -11,14 +11,14 @@ It is very easy to use.
 
 ### TL;DR
 
-`hours[ -e <email>][ <path>]`
+`git hours[ -e <email>][ <path>]`
 
 ### Details
 
-Just call `hours` in repository directory. That's it. It automatically use your email from default `.gitconfig` file, and count hours. Now you can see result:
+Just call `git hours` in repository directory. That's it. It automatically use your email from default `.gitconfig` file, and count hours. Now you can see result:
 
 ```shell
-ceigh@arch ~/Work/hours ⎇ master $ hours
+ceigh@arch ~/Work/hours ⎇ master $ git hours
 ceigh@pm.me    16    19
 ```
 
@@ -29,18 +29,18 @@ If you don't have `.gitconfig` file, you can create it, see `GIT-CONFIG(1)`.
 Also you can pass `-e` flag to command, with desired email address:
 
 ```shell
-ceigh@arch ~/Work/hours ⎇ master $ hours -e ceigh@pm.me
+ceigh@arch ~/Work/hours ⎇ master $ git hours -e ceigh@pm.me
 ceigh@pm.me    16    19
 ```
 
 And of course you can specify path to repository as non optional argument:
 
 ```shell
-ceigh@arch ~ $ hours Work/hours
+ceigh@arch ~ $ git hours Work/hours
 ceigh@pm.me    16    19
 ```
 
-For more information check `man hours`.
+For more information check `man git-hours`.
 
 ## Algorithm
 
@@ -53,11 +53,13 @@ As a main dependency i use [libgit2](https://github.com/libgit2/libgit2), to you
 After it, you can just
 
 ```shell
-git clone git@github.com:ceigh/hours.git
-cd hours
+git clone git@github.com:ceigh/git-hours.git
+cd git-hours
 make
 sudo make install
 ```
+
+*To delete this program, call `sudo make uninstall`.*
 
 ## Contribution
 
