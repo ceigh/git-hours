@@ -9,7 +9,7 @@
 
 #include <git2.h>
 
-#define VERSION "1.1.0"
+#define VERSION "1.1.1"
 
 int MAX_DIFF_MINUTES = 120;
 int FIRST_COMMIT_MINUTES = 120;
