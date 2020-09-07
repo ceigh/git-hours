@@ -48,6 +48,16 @@ For detail explanation, you can see original git-hours [HIW](https://github.com/
 
 ## Installation
 
+### Package manager
+
+For now, you can install it via [AUR](https://aur.archlinux.org/packages/git-hours):
+
+```
+yay -S git-hours
+```
+
+### Manual
+
 As a main dependency i use [libgit2](https://github.com/libgit2/libgit2), so you need to install it in your system first.
 
 After it, you can just

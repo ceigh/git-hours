@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <git2.h>
 
-#define VERSION "1.1.4"
+#define VERSION "1.1.5"
 
 int MAX_DIFF_MINUTES = 120;
 int FIRST_COMMIT_MINUTES = 120;
@@ -142,9 +142,9 @@ void parse_opts(int argc, char **argv, char **email, char **path) {
           exit(EXIT_FAILURE);
         } else break;
       case 'h':
-        if (system("man git hours")) exit(EXIT_SUCCESS);
+        if (!(system("man git hours"))) exit(EXIT_SUCCESS);
         else {
-          fprintf(stderr, "Command processor doesn't exists");
+          fprintf(stderr, "Command processor doesn't exists\n");
           exit(EXIT_FAILURE);
         }
       case 'v':
