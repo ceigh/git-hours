@@ -1,15 +1,11 @@
 #include <ctype.h>
 #include <getopt.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
-#include <linux/limits.h>
-
 #include <git2.h>
 
-#define VERSION "1.1.2"
+#define VERSION "1.1.3"
 
 int MAX_DIFF_MINUTES = 120;
 int FIRST_COMMIT_MINUTES = 120;
@@ -33,6 +29,18 @@ const char *get_default_email() {
     exit(EXIT_FAILURE);
   }
   return email;
+}
+
+char *cwd() {
+  long size = pathconf(".", _PC_PATH_MAX);
+  char *buf;
+
+  if ((buf = (char *)malloc((size_t)size)) != NULL)
+    return getcwd(buf, (size_t)size);
+  else {
+    perror("Error getting the path of the current working directory");
+    exit(EXIT_FAILURE);
+  }
 }
 
 void get_hours(
@@ -134,8 +142,11 @@ void parse_opts(int argc, char **argv, char **email, char **path) {
           exit(EXIT_FAILURE);
         } else break;
       case 'h':
-        system("man git hours");
-        exit(EXIT_SUCCESS);
+        if (system("man git hours")) exit(EXIT_SUCCESS);
+        else {
+          fprintf(stderr, "Command processor doesn't exists");
+          exit(EXIT_FAILURE);
+        }
       case 'v':
         printf("%s\n", VERSION);
         exit(EXIT_SUCCESS);
@@ -162,10 +173,8 @@ int main(int argc, char **argv) {
 
   const char *email = email_opt_val == NULL
     ? get_default_email() : email_opt_val;
-  char cwd[PATH_MAX];
-  getcwd(cwd, sizeof(cwd));
   const char *path = path_opt_val == NULL
-    ? cwd : path_opt_val;
+    ? cwd() : path_opt_val;
 
   long commits = 0, hours = 0;
   get_hours(&hours, &commits, path, email);
