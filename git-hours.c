@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <git2.h>
 
-#define VERSION "1.1.3"
+#define VERSION "1.1.4"
 
 int MAX_DIFF_MINUTES = 120;
 int FIRST_COMMIT_MINUTES = 120;
