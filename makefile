@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Werror
+CFLAGS=-Wall -Werror -O
 PREFIX=/usr/local
 NAME=git-hours
 
