@@ -1,6 +1,9 @@
 # 🕰️ git-hours
 > Tool for count the time spent on code via git.
 
+[![AUR version](https://img.shields.io/aur/version/git-hours)](https://aur.archlinux.org/packages/git-hours)
+[![AUR last modified](https://img.shields.io/aur/last-modified/git-hours)](https://aur.archlinux.org/packages/git-hours)
+
 ## Why
 
 Previously, I used [git-hours](https://github.com/kimmobrunfeldt/git-hours) tool, but due to the impossibility of a normal installation, and questionable work speed, it was decided to create my own utility.
