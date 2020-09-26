@@ -8,13 +8,13 @@
 
 Previously, I used [git-hours](https://github.com/kimmobrunfeldt/git-hours) tool, but due to the impossibility of a normal installation, and questionable work speed, it was decided to create my own utility.
 
-It is very easy to use.
+Easy to use.
 
 ## Usage
 
 ### TL;DR
 
-`git hours [-e email] [-d max_commits_difference_minutes] [-f first_commit_minutes] [path]`
+`git hours [-e email] [-d max_commits_difference_minutes] [-f first_commit_minutes]`
 
 ### Details
 
@@ -36,18 +36,20 @@ git hours -e me@org.com
 me@org.com    16    19
 ```
 
-And of course you can specify path to repository as non optional argument:
+To specify path to repository, you can use git's `-C` flag:
 
 ```shell
-git hours Work/hours
+git -C /path/to/repo/ hours
 me@org.com    16    19
 ```
+
+Note that in first we pass flags for `git`, and only then for `hours`.
 
 For more information check `man git hours`.
 
 ## Algorithm
 
-For detail explanation, you can see original git-hours [HIW](https://github.com/kimmobrunfeldt/git-hours#how-it-works). I used very similar method.
+For detail explanation, you can see original git-hours [HIW](https://github.com/kimmobrunfeldt/git-hours#how-it-works). I used similar method.
 
 ## Installation
 

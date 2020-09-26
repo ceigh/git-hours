@@ -1,4 +1,4 @@
-.TH GIT\-HOURS 1 "04 Sep 2020" "1.1.0" "Git Hours Man Page"
+.TH GIT\-HOURS 1 "26 Sep 2020" "1.2.0" "Git Hours Man Page"
 
 .ll 80
 
@@ -10,7 +10,6 @@ git hours \- count the time spent on code via git
 .OP \-e email
 .OP \-d max_commits_difference_minutes
 .OP \-f first_commit_minutes
-.RI [ path ]
 .YS
 
 .SH DESCRIPTION
@@ -75,8 +74,9 @@ Use current working directory as git repository for count and show hours spended
 file.
 .br
 .in
-git hours
+git -C
 .I /path/to/repo
+hours
 .br
 .in 14
 Use
@@ -95,9 +95,10 @@ Use current working directory as git repository for count and show hours spended
 email.
 .br
 .in
-git hours \-e
-.I me@org.com
+git -C
 .I /path/to/repo
+hours \-e
+.I me@org.com
 .br
 .in 14
 Use
