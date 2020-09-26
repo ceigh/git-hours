@@ -45,13 +45,13 @@ char *cwd() {
 
 void get_hours(
   long *hours, long *commits,
-  const char *path_to_repo, const char *author_email
+  const char *author_email
 ) {
   git_repository *repo = NULL;
   git_revwalk *walker = NULL;
 
   git_libgit2_init();
-  git_repository_open(&repo, path_to_repo);
+  git_repository_open(&repo, cwd());
   if (repo == NULL) {
     perror("Error opening repository");
     exit(EXIT_FAILURE);
@@ -117,7 +117,7 @@ void get_hours(
   *commits = commits_total;
 }
 
-void parse_opts(int argc, char **argv, char **email, char **path) {
+void parse_opts(int argc, char **argv, char **email) {
   /* see
    * https://gnu.org/savannah-checkouts/gnu/libc/manual/html_node/Example-of-Getopt.html
    */
@@ -162,22 +162,17 @@ void parse_opts(int argc, char **argv, char **email, char **path) {
         abort();
     }
   }
-
-  /* get non-optional path arg */
-  *path = argv[optind];
 }
 
 int main(int argc, char **argv) {
-  char *email_opt_val = NULL, *path_opt_val = NULL;
-  parse_opts(argc, argv, &email_opt_val, &path_opt_val);
+  char *email_opt_val = NULL;
+  parse_opts(argc, argv, &email_opt_val);
 
   const char *email = email_opt_val == NULL
     ? get_default_email() : email_opt_val;
-  const char *path = path_opt_val == NULL
-    ? cwd() : path_opt_val;
 
   long commits = 0, hours = 0;
-  get_hours(&hours, &commits, path, email);
+  get_hours(&hours, &commits, email);
 
   printf("%s\t%li\t%li\n", email, hours, commits);
   exit(EXIT_SUCCESS);
