@@ -10,26 +10,32 @@ unsigned short MAX_DIFF_MINUTES = 120;
 unsigned short FIRST_COMMIT_MINUTES = 120;
 
 /* to get result of diff_file_cb() */
-bool _is_file_in_diff = false; // TODO: how to make not global?
+bool _is_file_changed_in_commit = false; // TODO: how to make not global?
+
 /* https://libgit2.org/libgit2/#HEAD/group/callback/git_diff_file_cb
  * can't return or point useful value, so I use global variable here
  */
-int diff_file_cb(const git_diff_delta *delta, float progress, void *file_name) {
-  /* if file_name in diff */
-  if (!strcmp(file_name, delta -> old_file.path) ||
-    !strcmp(file_name, delta -> new_file.path)) _is_file_in_diff = true;
+int _diff_file_cb(const git_diff_delta *delta, float progress, void *file_name) {
+  /* check git-diff(1) for --diff-filter */
+  const char status = git_diff_status_char(delta -> status);
+  const bool is_changed = status == *"A" || status == *"M";
+  if (!is_changed) return 0;
+  const bool is_in_files = !strcmp(file_name, delta -> old_file.path) ||
+    !strcmp(file_name, delta -> new_file.path);
+  if (is_in_files) _is_file_changed_in_commit = true;
   return 0;
 }
-const int check_that_file_in_diff(
-  git_repository *repo, /* need to git_diff_tree_to_tree() */
+
+const int check_that_file_changed_in_commit(
+  git_repository *repo, /* required for git_diff_tree_to_tree() */
   const git_commit *commit,
   char *file_name,
-  bool *out_is_file_in_diff
+  bool *out_is_file_changed_in_commit
 ) {
   int return_code = 0;
 
-  unsigned parentcount = git_commit_parentcount(commit);
   /* to track changes from all parents */
+  unsigned parentcount = git_commit_parentcount(commit);
   for (unsigned i = 0; i < parentcount; ++i) {
     git_commit *parent_commit = NULL;
     git_commit_parent(&parent_commit, commit, i);
@@ -44,9 +50,9 @@ const int check_that_file_in_diff(
     git_diff *diff = NULL;
     git_diff_tree_to_tree(&diff, repo, parent_tree, tree, NULL);
 
-    _is_file_in_diff = false;
-    return_code = git_diff_foreach(diff, diff_file_cb, NULL, NULL, NULL, file_name);
-    *out_is_file_in_diff = _is_file_in_diff;
+    _is_file_changed_in_commit = false;
+    return_code = git_diff_foreach(diff, _diff_file_cb, NULL, NULL, NULL, file_name);
+    *out_is_file_changed_in_commit = _is_file_changed_in_commit;
 
     /* free */
     git_diff_free(diff);
@@ -98,9 +104,10 @@ void get_hours(
 
     /* filter commits - only with specified file */
     if (file_name != NULL) { /* if file name provided */
-      bool is_file_in_diff = false;
-      check_that_file_in_diff(repo, commit, file_name, &is_file_in_diff);
-      if (!is_file_in_diff) {
+      bool is_file_changed_in_commit = false;
+      check_that_file_changed_in_commit(
+        repo, commit, file_name, &is_file_changed_in_commit);
+      if (!is_file_changed_in_commit) {
         git_commit_free(commit);
         continue;
       }
