@@ -8,8 +8,8 @@
 
 #define VERSION "2.0.0"
 
-int MAX_DIFF_MINUTES = 120;
-int FIRST_COMMIT_MINUTES = 120;
+unsigned short MAX_DIFF_MINUTES = 120;
+unsigned short FIRST_COMMIT_MINUTES = 120;
 
 /* get user email from .gitconfig */
 const char *get_default_email() {
@@ -32,7 +32,7 @@ const char *get_default_email() {
   return email;
 }
 
-char *cwd() {
+const char *cwd() {
   long size = pathconf(".", _PC_PATH_MAX);
   char *buf;
 
@@ -57,7 +57,7 @@ int diff_file_cb(const git_diff_delta *delta, float progress, void *file_name) {
   return 0;
 }
 
-int check_that_file_in_diff(
+const int check_that_file_in_diff(
   git_repository *repo, /* need to git_diff_tree_to_tree() */
   const git_commit *commit,
   char *file_name,
@@ -96,7 +96,8 @@ int check_that_file_in_diff(
 }
 
 void get_hours(
-  long *hours, long *commits,
+  unsigned long *hours,
+  unsigned long *commits,
   const char *author_email
 ) {
   git_repository *repo = NULL;
@@ -116,16 +117,16 @@ void get_hours(
   git_revwalk_push_head(walker);
 
   git_oid oid;
-  float minutes_total = 0;
-  long commits_total = 0;
-  long prev_time = 0;
+  float minutes_total = 0.0f;
+  unsigned long commits_total = 0;
+  unsigned prev_time = 0;
 
   while(!git_revwalk_next(&oid, walker)) {
     git_commit *commit = NULL;
     git_commit_lookup(&commit, repo, &oid);
-    const git_signature author = *git_commit_author(commit);
 
     /* filter commits - only from one author */
+    const git_signature author = *git_commit_author(commit);
     if (strcmp(author_email, author.email)) {
       git_commit_free(commit);
       continue;
@@ -144,9 +145,9 @@ void get_hours(
     /* now we can start to count commits and time */
     commits_total++;
 
-    const long time = author.when.time;
+    const unsigned time = author.when.time;
     /* difference between commits in minutes */
-    const float diff = (time - prev_time) / 60.0;
+    const float diff = (time - prev_time) / 60.0f;
     prev_time = time;
 
     /* skip first commit difference */
@@ -175,14 +176,12 @@ void get_hours(
   git_libgit2_shutdown();
 
   /* point results */
-  *hours = (long)(minutes_total / 60);
+  *hours = (unsigned long)(minutes_total / 60.0f);
   *commits = commits_total;
 }
 
-void parse_opts(int argc, char **argv, char **email) {
-  /* see
-   * https://gnu.org/savannah-checkouts/gnu/libc/manual/html_node/Example-of-Getopt.html
-   */
+/* https://gnu.org/savannah-checkouts/gnu/libc/manual/html_node/Example-of-Getopt.html */
+void parse_opts(const int argc, char **argv, char **email) {
   int c;
   opterr = 0;
 
@@ -194,24 +193,29 @@ void parse_opts(int argc, char **argv, char **email) {
           fprintf(stderr, "Option -%c requires number > 0\n", c);
           exit(EXIT_FAILURE);
         } else break;
+
       case 'e':
         *email = optarg;
         break;
+
       case 'f':
         FIRST_COMMIT_MINUTES = atoi(optarg);
         if (!FIRST_COMMIT_MINUTES) {
           fprintf(stderr, "Option -%c requires number > 0\n", c);
           exit(EXIT_FAILURE);
         } else break;
+
       case 'h':
         if (!(system("man git hours"))) exit(EXIT_SUCCESS);
         else {
           fprintf(stderr, "Command processor doesn't exists\n");
           exit(EXIT_FAILURE);
         }
+
       case 'v':
         printf("%s\n", VERSION);
         exit(EXIT_SUCCESS);
+
       case '?':
         if (optopt == 'd' || optopt == 'e' || optopt == 'f')
           fprintf(stderr, "Option -%c requires an argument\n", optopt);
@@ -220,20 +224,21 @@ void parse_opts(int argc, char **argv, char **email) {
         else
           fprintf (stderr, "Unknown option character `\\x%x`\n", optopt);
         exit(EXIT_FAILURE);
+
       default:
         abort();
     }
   }
 }
 
-int main(int argc, char **argv) {
+int main(const int argc, char **argv) {
   char *email_opt_val = NULL;
   parse_opts(argc, argv, &email_opt_val);
 
   const char *email = email_opt_val == NULL
     ? get_default_email() : email_opt_val;
 
-  long commits = 0, hours = 0;
+  unsigned long commits = 0, hours = 0;
   get_hours(&hours, &commits, email);
 
   printf("%s\t%li\t%li\n", email, hours, commits);
