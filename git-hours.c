@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <getopt.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -43,6 +44,57 @@ char *cwd() {
   }
 }
 
+/* to get result of diff_file_cb() */
+bool _is_file_in_diff = false; // TODO: how to make not global?
+
+/* https://libgit2.org/libgit2/#HEAD/group/callback/git_diff_file_cb
+ * can't return or point useful value, so I use global variable here
+ */
+int diff_file_cb(const git_diff_delta *delta, float progress, void *file_name) {
+  /* if file_name in diff */
+  if (!strcmp(file_name, delta -> old_file.path) ||
+    !strcmp(file_name, delta -> new_file.path)) _is_file_in_diff = true;
+  return 0;
+}
+
+int check_that_file_in_diff(
+  git_repository *repo, /* need to git_diff_tree_to_tree() */
+  const git_commit *commit,
+  char *file_name,
+  bool *out_is_file_in_diff
+) {
+  int return_code = 0;
+
+  unsigned parentcount = git_commit_parentcount(commit);
+  /* to track changes from all parents */
+  for (unsigned i = 0; i < parentcount; ++i) {
+    git_commit *parent_commit = NULL;
+    git_commit_parent(&parent_commit, commit, i);
+
+    /* commit trees to get diff */
+    git_tree *parent_tree = NULL;
+    git_tree *tree = NULL;
+    git_commit_tree(&parent_tree, parent_commit);
+    git_commit_tree(&tree, commit);
+
+    /* https://libgit2.org/libgit2/#HEAD/group/diff/git_diff_tree_to_tree */
+    git_diff *diff = NULL;
+    git_diff_tree_to_tree(&diff, repo, parent_tree, tree, NULL);
+
+    _is_file_in_diff = false;
+    return_code = git_diff_foreach(diff, diff_file_cb, NULL, NULL, NULL, file_name);
+    *out_is_file_in_diff = _is_file_in_diff;
+
+    /* free */
+    git_diff_free(diff);
+    git_tree_free(tree);
+    git_tree_free(parent_tree);
+    git_commit_free(parent_commit);
+  }
+
+  return return_code;
+}
+
 void get_hours(
   long *hours, long *commits,
   const char *author_email
@@ -77,6 +129,16 @@ void get_hours(
     if (strcmp(author_email, author.email)) {
       git_commit_free(commit);
       continue;
+    }
+
+    /* filter commits - only with specified file */
+    if (false) { /* if file name provided */
+      bool is_file_in_diff = false;
+      check_that_file_in_diff(repo, commit, "", &is_file_in_diff);
+      if (!is_file_in_diff) {
+        git_commit_free(commit);
+        continue;
+      }
     }
 
     /* now we can start to count commits and time */
