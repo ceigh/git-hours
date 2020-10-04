@@ -61,7 +61,8 @@ const int check_that_file_in_diff(
 void get_hours(
   unsigned long *hours,
   unsigned long *commits,
-  const char *author_email
+  const char *author_email,
+  char *file_name
 ) {
   git_repository *repo = NULL;
   git_revwalk *walker = NULL;
@@ -96,9 +97,9 @@ void get_hours(
     }
 
     /* filter commits - only with specified file */
-    if (false) { /* if file name provided */
+    if (file_name != NULL) { /* if file name provided */
       bool is_file_in_diff = false;
-      check_that_file_in_diff(repo, commit, "", &is_file_in_diff);
+      check_that_file_in_diff(repo, commit, file_name, &is_file_in_diff);
       if (!is_file_in_diff) {
         git_commit_free(commit);
         continue;
@@ -144,7 +145,7 @@ void get_hours(
 }
 
 /* https://gnu.org/savannah-checkouts/gnu/libc/manual/html_node/Example-of-Getopt.html */
-void parse_opts(const int argc, char **argv, char **email) {
+void parse_opts(const int argc, char **argv, char **email, char **file_name) {
   int c;
   opterr = 0;
 
@@ -192,17 +193,21 @@ void parse_opts(const int argc, char **argv, char **email) {
         abort();
     }
   }
+
+  /* get non-optional file_name arg */
+  *file_name = argv[optind];
 }
 
 int main(const int argc, char **argv) {
   char *email_opt_val = NULL;
-  parse_opts(argc, argv, &email_opt_val);
+  char *file_name = NULL;
+  parse_opts(argc, argv, &email_opt_val, &file_name);
 
   const char *email = email_opt_val == NULL
     ? get_default_email() : email_opt_val;
 
   unsigned long commits = 0, hours = 0;
-  get_hours(&hours, &commits, email);
+  get_hours(&hours, &commits, email, file_name);
 
   printf("%s\t%li\t%li\n", email, hours, commits);
   exit(EXIT_SUCCESS);
