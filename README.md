@@ -1,4 +1,4 @@
-# 🕰️ git-hours
+# git-hours
 > Tool for count the time spent on code via git.
 
 [![AUR version](https://img.shields.io/aur/version/git-hours)](https://aur.archlinux.org/packages/git-hours)
@@ -14,7 +14,7 @@ Easy to use.
 
 ### TL;DR
 
-`git hours [-e email] [-d max_commits_difference_minutes] [-f first_commit_minutes]`
+`git hours [-e email] [-d max_commits_difference_minutes] [-f first_commit_minutes] [file_name]`
 
 ### Details
 
@@ -44,6 +44,13 @@ me@org.com    16    19
 ```
 
 Note that in first we pass flags for `git`, and only then for `hours`.
+
+If you want to restrict calculations only for one specific file in repository:
+
+```shell
+git hours file_name
+me@org.com    6    9
+```
 
 For more information check `man git hours`.
 
