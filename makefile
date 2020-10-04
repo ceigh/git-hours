@@ -2,8 +2,9 @@ CFLAGS=-Wall -Werror -O
 PREFIX=/usr/local
 MAN_PREFIX=/usr/local/man
 NAME=git-hours
+HELPERS=helpers
 
-$(NAME): $(NAME).o -lgit2
+$(NAME): $(NAME).o $(HELPERS).o -lgit2
 
 clean:
 	$(RM) $(NAME) *.o

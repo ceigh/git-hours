@@ -3,50 +3,14 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
-#include <git2.h>
 
-#define VERSION "2.0.0"
+#include "helpers.h"
 
 unsigned short MAX_DIFF_MINUTES = 120;
 unsigned short FIRST_COMMIT_MINUTES = 120;
 
-/* get user email from .gitconfig */
-const char *get_default_email() {
-  const char *email = NULL;
-  git_config *cfg = NULL;
-  git_config *cfg_snapshot = NULL;
-
-  git_libgit2_init();
-  git_config_open_default(&cfg);
-  git_config_snapshot(&cfg_snapshot, cfg);
-  git_config_get_string(&email, cfg_snapshot, "user.email");
-
-  git_config_free(cfg);
-  git_libgit2_shutdown();
-
-  if (email == NULL) {
-    fprintf(stderr, "Empty git user email!\n");
-    exit(EXIT_FAILURE);
-  }
-  return email;
-}
-
-const char *cwd() {
-  long size = pathconf(".", _PC_PATH_MAX);
-  char *buf;
-
-  if ((buf = (char *)malloc((size_t)size)) != NULL)
-    return getcwd(buf, (size_t)size);
-  else {
-    perror("Error getting the path of the current working directory");
-    exit(EXIT_FAILURE);
-  }
-}
-
 /* to get result of diff_file_cb() */
 bool _is_file_in_diff = false; // TODO: how to make not global?
-
 /* https://libgit2.org/libgit2/#HEAD/group/callback/git_diff_file_cb
  * can't return or point useful value, so I use global variable here
  */
@@ -56,7 +20,6 @@ int diff_file_cb(const git_diff_delta *delta, float progress, void *file_name) {
     !strcmp(file_name, delta -> new_file.path)) _is_file_in_diff = true;
   return 0;
 }
-
 const int check_that_file_in_diff(
   git_repository *repo, /* need to git_diff_tree_to_tree() */
   const git_commit *commit,
