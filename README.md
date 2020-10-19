@@ -52,6 +52,8 @@ git hours file_name
 me@org.com    6    9
 ```
 
+But it may be _slow_ on repos with big amount of commits.
+
 For more information check `man git hours`.
 
 ## Algorithm
